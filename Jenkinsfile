@@ -31,7 +31,7 @@ pipeline {
             }
             step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'grafana'])
         }
-    } catch (Exception e) {
+     catch (Exception e) {
         currentBuild.result = "FAILURE"
         step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'grafana'])
     }
