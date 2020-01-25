@@ -21,10 +21,19 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
+
+       
+        stage('Report') { //(4)
+            if (currentBuild.currentResult == 'UNSTABLE') {
+                currentBuild.result = "UNSTABLE"
+            } else {
+                currentBuild.result = "SUCCESS"
             }
+            step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'grafana'])
         }
+    } catch (Exception e) {
+        currentBuild.result = "FAILURE"
+        step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'grafana'])
+    }
     }
 }
