@@ -8,6 +8,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                
                 sh 'mvn -B -DskipTests clean package'
             }
         }
@@ -21,13 +23,12 @@ pipeline {
                 }
             }
         }
-        stage('Report') { //(4)
-            if (currentBuild.currentResult == 'UNSTABLE') {
-                currentBuild.result = "UNSTABLE"
-            } else {
-                currentBuild.result = "SUCCESS"
+        stage('Deliver') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+                //Extend the script to deliver to spesified location 
             }
-            step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'grafana'])
         }
+       
     }
 }
