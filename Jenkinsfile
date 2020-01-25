@@ -26,7 +26,6 @@ pipeline {
         stage('Deliver') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
-                //Extend the script to publish to web server at spesified location 
             }
         }
        
